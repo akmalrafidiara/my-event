@@ -114,4 +114,26 @@ class EventController extends Controller
 
         return redirect()->route('events.index')->with('success','Event deleted successfully');
     }
+
+    public function beranda()
+    {
+        // Mengambil event dengan status 'upcoming'
+        $upcomingEvents = Event::where('status', 'upcoming')->get();
+        
+        // Mengambil event dengan status 'ongoing'
+        $ongoingEvents = Event::where('status', 'ongoing')
+            ->where('start_event_at', '<=', now())
+            ->where('end_event_at', '>=', now())
+            ->get();
+        
+        // Mengambil event dengan status 'open'
+        $openEvents = Event::where('status', 'open')->get(); // Event dengan status open
+        
+        return view('beranda', compact('upcomingEvents', 'ongoingEvents', 'openEvents'));
+    }
+    
+    
+
+        
+
 }
