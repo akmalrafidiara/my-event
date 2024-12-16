@@ -39,16 +39,23 @@ Route::middleware('auth')->group(function () {
         Route::get('/events/{id}/edit', [EventController::class, 'edit'])->name('events.edit')->whereNumber('id');
         Route::patch('/events/{id}', [EventController::class, 'update'])->name('events.update')->whereNumber('id');
         Route::delete('/events/{id}', [EventController::class, 'destroy'])->name('events.destroy')->whereNumber('id');
+   
+        Route::patch('/payments/{id}/approved', [PaymentController::class, 'approved'])->name('payments.approved')->whereNumber('id');
+    Route::patch('/payments/{id}/rejected', [PaymentController::class, 'rejected'])->name('payments.rejected')->whereNumber('id');
+
     });
 
     Route::middleware('role:admin,user')->group(function () {
         Route::get('events', [EventController::class, 'index'])->name('events.index');
         Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show')->whereNumber('id');
+        Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+        Route::get('/payments/{id}', [PaymentController::class, 'detail'])->name('payments.detail')->whereNumber('id');
     });
 
     Route::middleware('role:user')->group(function () {
         Route::get('/registrants', [EventRegistrantController::class, 'index'])->name('registrants.index');
         Route::post('/registrants/{id}', [EventRegistrantController::class, 'register'])->name('registrants.register')->whereNumber('id');
+        Route::patch('/payments/{id}', [PaymentController::class, 'update'])->name('payments.update')->whereNumber('id');
     });
 });
 
