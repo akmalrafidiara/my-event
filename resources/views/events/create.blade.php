@@ -1,24 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-1xl text-gray-800 leading-tight">
             {{ __('Create New event') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="max-w-4xl mx-auto sm:px-4 lg:px-8 space-y-4">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <header>
                     <h2 class="text-lg font-medium text-gray-900">
                         {{ __('Create New event') }}
                     </h2>
                     <p class="mt-1 text-sm text-gray-600">
-                        {{ __('Creating new upcoming event.') }}
+                        {{ __("Creating new upcoming event.") }}
                     </p>
                 </header>
 
-                <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data"
-                    class="mt-6 space-y-6">
+                <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
                     @csrf
 
                     <!-- Title Input -->
@@ -57,7 +56,8 @@
                     {{-- End Event At --}}
                     <div>
                         <x-input-label for="end_event_at" :value="__('End Event At')" />
-                        <x-text-input id="end_event_at" name="end_event_at" type="date" class="mt-1 block w-full" />
+                        <x-text-input id="end_event_at" name="end_event_at" type="date"
+                            class="mt-1 block w-full" />
                         <x-input-error class="mt-2" :messages="$errors->get('end_event_at')" />
                     </div>
 
@@ -88,8 +88,7 @@
                     {{-- Featured Image --}}
                     <div>
                         <x-input-label for="featured_image" :value="__('Featured Image')" />
-                        <x-text-input id="featured_image" name="featured_image" type="file"
-                            class="mt-1 p-4 block w-full" :value="old('featured_image')" />
+                        <x-text-input id="featured_image" name="featured_image" type="file" class="mt-1 p-4 block w-full" :value="old('featured_image')" />
                         <x-input-error class="mt-2" :messages="$errors->get('featured_image')" />
                     </div>
 
