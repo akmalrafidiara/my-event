@@ -11,25 +11,34 @@ class Event extends Model
 
     protected $guarded = [];
 
+    // Cast date attributes to Carbon instances
+    protected $casts = [
+        'start_event_at' => 'datetime',
+        'end_event_at' => 'datetime',
+    ];
+
     public function category()
     {
         return $this->belongsTo(EventCategory::class);
     }
 
-    // Scope untuk Upcoming Events
+    // Scope for Upcoming Events
     public function scopeUpcoming($query)
     {
         return $query->where('start_event_at', '>', now());
     }
 
+    // Scope for Ongoing Events
     // Scope untuk Ongoing Events
-    public function scopeOngoing($query)
-    {
-        return $query->where('start_event_at', '<=', now())
-                     ->where('end_event_at', '>=', now());
-    }
+public function scopeOngoing($query)
+{
+    return $query->where('status', 'ongoing')
+                 ->where('start_event_at', '<=', now())
+                 ->where('end_event_at', '>=', now());
+}
 
-    // Scope untuk Open Events
+
+    // Scope for Open Events
     public function scopeOpen($query)
     {
         return $query->where('status', 'open');

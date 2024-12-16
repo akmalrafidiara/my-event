@@ -107,12 +107,23 @@ class EventController extends Controller
 
     public function welcome()
     {
-        $upcomingEvents = Event::upcoming()->get();
-        $ongoingEvents = Event::ongoing()->get();
-        $openEvents = Event::open()->get();
+        // Mengambil event dengan status 'upcoming'
+        $upcomingEvents = Event::where('status', 'upcoming')->get();
+        
+        // Mengambil event dengan status 'ongoing'
+        $ongoingEvents = Event::where('status', 'ongoing')
+            ->where('start_event_at', '<=', now())
+            ->where('end_event_at', '>=', now())
+            ->get();
+        
+        // Mengambil event dengan status 'open'
+        $openEvents = Event::where('status', 'open')->get(); // Event dengan status open
         
         return view('welcome', compact('upcomingEvents', 'ongoingEvents', 'openEvents'));
     }
+    
+    
+
         
 
 }

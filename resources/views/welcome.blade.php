@@ -16,7 +16,6 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-
         @include('layouts.navigation')
 
         <div class="container mx-auto my-6 px-4">
@@ -27,7 +26,7 @@
             </div>
 
             {{-- Upcoming Events --}}
-            <div class="mb-12">
+            <div class="container mx-auto mb-12">
                 <h2 class="text-3xl font-semibold mb-6 text-center">Upcoming Events</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @forelse($upcomingEvents as $event)
@@ -35,18 +34,18 @@
                             <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
                             <div class="p-4 bg-white">
                                 <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
-                                <p class="text-sm text-gray-600">Start: {{ $event->start_event_at }}</p>
+                                <p class="text-sm text-gray-600">Start: {{ $event->start_event_at->format('d M, Y') }}</p>
                                 <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:text-blue-700 mt-3 inline-block">Details</a>
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-600 text-center">No upcoming events found.</p>
+                        <p class="text-gray-600">No upcoming events found.</p>
                     @endforelse
                 </div>
             </div>
 
             {{-- Ongoing Events --}}
-            <div class="mb-12">
+            <div class="container mx-auto mb-12">
                 <h2 class="text-3xl font-semibold mb-6 text-center">Ongoing Events</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @forelse($ongoingEvents as $event)
@@ -54,18 +53,18 @@
                             <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
                             <div class="p-4 bg-white">
                                 <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
-                                <p class="text-sm text-gray-600">End: {{ $event->end_event_at }}</p>
+                                <p class="text-sm text-gray-600">End: {{ $event->end_event_at->format('d M, Y') }}</p>
                                 <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:text-blue-700 mt-3 inline-block">Details</a>
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-600 text-center">No ongoing events found.</p>
+                        <p class="text-gray-600">No ongoing events found.</p>
                     @endforelse
                 </div>
             </div>
 
             {{-- Open Events --}}
-            <div class="mb-12">
+            <div class="container mx-auto mb-12">
                 <h2 class="text-3xl font-semibold mb-6 text-center">Open Events</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @forelse($openEvents as $event)
@@ -78,13 +77,12 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-600 text-center">No open events found.</p>
+                        <p class="text-gray-600">No open events found.</p>
                     @endforelse
                 </div>
             </div>
 
         </div>
-
     </div>
 </body>
 </html>
