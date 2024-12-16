@@ -25,42 +25,29 @@
             @endif
 
             <!-- Tabel daftar event -->
-            <div style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); overflow: hidden;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+                {{-- <table class="table-auto text-dark w-full text-left">
                     <thead>
-                        <tr style="background-color: #ea580c; color: white;">
-                            <th style="padding: 20px;">No</th>
-                            <th style="padding: 16px;">Image</th>
-                            <th style="padding: 16px;">Title</th>
-                            <th style="padding: 16px;">Location</th>
-                            <th style="padding: 16px;">Price</th>
-                            <th style="padding: 16px;">Category</th>
-                            <th style="padding: 16px;">Quota</th>
-                            <th style="padding: 16px;">Status</th>
-                            <th style="padding: 20px;">Start At</th>
-                            <th style="padding: 16px;">Registrant</th>
-                            <th style="padding: 16px;">Action</th>
+                        <tr>
+                            <th class="px-4 py-2">#</th>
+                            <th class="px-4 py-2">Image</th>
+                            <th class="px-4 py-2">Title</th>
+                            <th class="px-4 py-2">Location</th>
+                            <th class="px-4 py-2">Price</th>
+                            <th class="px-4 py-2">Category</th>
+                            <th class="px-4 py-2">Quota</th>
+                            <th class="px-4 py-2">Status</th>
+                            <th class="px-4 py-2">Start At</th>
+                            <th class="px-4 py-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($events as $event)
-                            <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#f3f4f6';" onmouseout="this.style.backgroundColor='white';">
-                                <td style="padding: 16px; text-align: center;">{{ $loop->iteration }}</td>
-                                <td style="padding: 16px; text-align: center;">
-                                    <!-- Image size is consistent for both user and admin -->
-                                    <img src="{{ Storage::url($event->featured_image) }}"
-                                         alt="{{ $event->title }}"
-                                         style="height: 80px; width: 100px; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                                </td>
-                                <td style="padding: 16px;">{{ $event->title }}</td>
-                                <td style="padding: 16px;">{{ $event->location }}</td>
-                                <td style="padding: 16px;">{{ $event->price }}</td>
-                                <td style="padding: 16px;">{{ $event->category->name }}</td>
-                                <td style="padding: 16px; text-align: center;">{{ $event->quota }}</td>
-                                <td style="padding: 16px; text-align: center;">
-                                    <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; color: white; background-color: {{ $event->status == 'active' ? '#16a34a' : '#dc2626' }};">
-                                        {{ ucfirst($event->status) }}
-                                    </span>
+                            <tr>
+                                <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                                <td class="px-4 py-2">
+                                    <img src="{{ Storage::url($event->featured_image) }}" alt="{{ $event->title }}"
+                                        class="h-20 w-auto object-cover">
                                 </td>
                                 <td style="padding: 16px; text-align: center;">{{ $event->start_event_at }}</td>
                                 <td style="padding: 16px; text-align: center;">{{ $event->registrant_count }}</td>
@@ -91,9 +78,39 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @foreach ($events as $event)
+                        @endforeach
                     </tbody>
-                </table>
-            </div>
+                </table> --}} 
+                <div class="w-full flex flex-wrap justify-evenly">
+                @foreach ($events as $event)
+                <div class="event" class="w-full bg-[#0000] p-10">
+                    <img src="{{ Storage::url($event->featured_image) }}" alt="{{ $event->title }}"
+                    class="h-20 w-auto object-cover" style="height: 7cm; width: 7cm; border-radius: 20px;" onclick="window.location.href = '{{ route('events.show', $event->id) }}'">
+                    <h1 class="text-3xl font-bold">{{ $event->title }}</h1>
+                    <small>At {{ $event->location }}</small>
+                    <div class="flex justify-evenly m-5">
+                    @if (auth()->user()->role == 'admin')
+                    <a href="{{ route('events.edit', $event->id) }}"
+                        class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">
+                        Edit
+                    </a>
+                    <form class="inline" action="{{ route('events.destroy', $event->id) }}"
+                        method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="bg-red-500 hover:bg-red-700 text-white text-xs font-bold py-1 px-2 rounded">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+                @else
+                </div>
+                @endif
+                </div>
+                @endforeach
+               </div>
         </div>
     </div>
 </x-app-layout>
