@@ -22,16 +22,16 @@
         <div class="container mx-auto my-6 px-4">
 
             {{-- Banner Section --}}
-            <div class="banner mb-8">
-                <img src="{{ asset('images/banner.jpg') }}" alt="Event Banner" class="img-fluid w-full rounded-lg shadow-md">
+            <div class="banner mb-6">
+                <img src="{{ Storage::url('images/banner.jpg') }}" alt="Event Banner" class="w-full h-64 object-cover rounded-lg shadow-md">
             </div>
 
             {{-- Upcoming Events --}}
-            <div class="container mx-auto mb-12">
+            <div class="mb-12">
                 <h2 class="text-3xl font-semibold mb-6 text-center">Upcoming Events</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @forelse($upcomingEvents as $event)
-                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300 max-w-xs mx-auto">
+                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
                             <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
                             <div class="p-4 bg-white">
                                 <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
@@ -40,17 +40,17 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-600">No upcoming events found.</p>
+                        <p class="text-gray-600 text-center">No upcoming events found.</p>
                     @endforelse
                 </div>
             </div>
 
             {{-- Ongoing Events --}}
-            <div class="container mx-auto mb-12">
+            <div class="mb-12">
                 <h2 class="text-3xl font-semibold mb-6 text-center">Ongoing Events</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @forelse($ongoingEvents as $event)
-                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300 max-w-xs mx-auto">
+                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
                             <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
                             <div class="p-4 bg-white">
                                 <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
@@ -59,17 +59,17 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-600">No ongoing events found.</p>
+                        <p class="text-gray-600 text-center">No ongoing events found.</p>
                     @endforelse
                 </div>
             </div>
 
             {{-- Open Events --}}
-            <div class="container mx-auto mb-12">
+            <div class="mb-12">
                 <h2 class="text-3xl font-semibold mb-6 text-center">Open Events</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @forelse($openEvents as $event)
-                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300 max-w-xs mx-auto">
+                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
                             <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
                             <div class="p-4 bg-white">
                                 <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-600">No open events found.</p>
+                        <p class="text-gray-600 text-center">No open events found.</p>
                     @endforelse
                 </div>
             </div>
