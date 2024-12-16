@@ -4,7 +4,6 @@
             {{ __('Events') }}
         </h2>
     </x-slot>
-
     <div style="padding: 48px 0; background-color: #f9fafb;">
         <div style="max-width: 1120px; margin: 0 auto; padding: 0 24px;">
             <!-- Tombol untuk menambahkan event baru -->
