@@ -1,94 +1,85 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Detail Event') }}
+            {{ __('Event Details') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <header>
-                    <h2 class="text-lg font-medium text-gray-900">
-                        {{ __($event->title) }}
-                    </h2>
-                    <p class="mt-1 text-sm text-gray-600">
-                        {{ __($event->description) }}
-                    </p>
-                </header>
+    <div class="py-7">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <a href="{{ route('events.index') }}"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Back
+                    </a>
             </div>
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="flex gap-4">
-                    <div class="w-1/3">
-                        <img src="{{ Storage::url($event->featured_image) }}" alt="" class="w-full rounded-lg">
-                    </div>
-                    <div class="w-3/4">
-                        <div class="flex justify-between">
-                            <div>
-                                <h1 class="text-2xl font-bold text-gray-8s00">{{ $event->title }}</h1>
+        </div>
 
-                                <p class="text-sm text-gray-500 flex items-center">
-                                    {{ $event->location }}
-                                </p>
-                            </div>
-                            <div>
-                                <!-- Status -->
-                                <p class="text-sm text-gray-500 flex items-center gap-1">
-                                    <span
-                                        class="inline-flex px-3 py-1 rounded-full text-xs font-semibold capitalize
-                                        {{ $event->status === 'open' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
-                                        {{ $event->status }}
-                                    </span>
-                                    <span
-                                        class="inline-flex px-3 py-1 rounded-full text-xs font-semibold capitalize text-white bg-indigo-600">
-                                        {{ $event->category->name }}
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="mt-2">
-                            <p class="text-gray-700 text-sm leading-relaxed">
-                                {{ $event->description }}
-                            </p>
-                        </div>
-
-                        <div class="mt-2">
-                            <div class="text-sm text-gray-500 flex flex-col gap-1">
-                                <p class="flex items-center">
-                                    <span>Start:
-                                        {{ \Carbon\Carbon::parse($event->start_event_at)->format('d M Y') }}</span>
-                                </p>
-                                <p class="flex items-center">
-                                    <span>End:
-                                        {{ \Carbon\Carbon::parse($event->end_event_at)->format('d M Y') }}</span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="mt-2">
-                            <p class="text-xl font-semibold text-gray-700 flex items-center">
-                                Price Rp {{ number_format($event->price, 0, ',', '.') }}
-                            </p>
-                            <p class="text-sm font-medium text-gray-700 flex items-center">
-                                Quota {{ $event->quota }} people
-                            </p>
-                            <p class="text-sm font-medium text-gray-700 flex items-center">
-                                Min Age {{ $event->min_age }} Y.O
-                            </p>
-                        </div>
-
-                        @if (auth()->user()->role == 'user')
-                            <form action="{{ route('registrants.register', $event->id) }}" class="mt-5"
-                                method="POST">
-                                @csrf
-                                <button
-                                    class="bg-violet-600 hover:bg-violet-800 text-violet-100 px-4 py-2 rounded">Register
-                                    now!</button>
-                            </form>
-                        @endif
+    <div class="bg-gradient-to-b from-purple-50 to-indigo-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <!-- Event Header Section -->
+            <div class="relative bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg overflow-hidden">
+                <img src="{{ Storage::url($event->featured_image) }}" alt="Event Image" class="w-full h-72 object-cover">
+                <div class="absolute inset-0 flex flex-col justify-center items-start px-6 py-8 space-y-3">
+                    <h1 class="text-4xl font-extrabold">{{ $event->title }}</h1>
+                    <p class="text-lg text-gray-200 flex items-center">
+                        <i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>{{ $event->location }}
+                    </p>
+                    <div class="flex space-x-4">
+                        <span class="px-4 py-1 bg-green-500 text-white rounded-full text-sm font-semibold capitalize">
+                            {{ $event->status }}
+                        </span>
+                        <span class="px-4 py-1 bg-blue-500 text-white rounded-full text-sm font-semibold capitalize">
+                            {{ $event->category->name }}
+                        </span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Event Details Section -->
+            <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+
+                <div class="text-left space-y-3 pb-3">
+                    <h2 class="text-2xl font-semibold text-gray-800">About This Event</h2>
+                    <p class="text-gray-600">{{ $event->description }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Date Details -->
+                    <div class="bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg p-4 text-center">
+                        <h3 class="text-lg font-bold text-blue-800">Start Date</h3>
+                        <p class="text-sm text-gray-700">{{ \Carbon\Carbon::parse($event->start_event_at)->format('d M Y') }}</p>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-100 to-purple-200  rounded-lg p-4 text-center">
+                        <h3 class="text-lg font-bold text-purple-800">End Date</h3>
+                        <p class="text-sm text-gray-700">{{ \Carbon\Carbon::parse($event->end_event_at)->format('d M Y') }}</p>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-100 to-green-200 rounded-lg p-4 text-center">
+                        <h3 class="text-lg font-bold text-green-800">Quota</h3>
+                        <p class="text-sm text-gray-700">{{ $event->quota }} people</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="p-4 bg-yellow-50 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-bold text-yellow-800">Price</h3>
+                        <p class="text-gray-700">Rp {{ number_format($event->price, 0, ',', '.') }}</p>
+                    </div>
+                    <div class="p-4 bg-red-50 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-bold text-red-800">Minimum Age</h3>
+                        <p class="text-gray-700">{{ $event->min_age }} Y.O</p>
+                    </div>
+                </div>
+
+                    <!-- Register Button -->
+                    @if (auth()->user()->role == 'user')
+                        <div class="text-center">
+                            <form action="{{ route('registrants.register', $event->id) }}" method="POST" class="mt-4">
+                                @csrf
+                                <button class="inline-block bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-medium px-8 py-3 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2">
+                                    Register Now!
+                                </button>
+                            </form>
+                        </div>
+                    @endif
             </div>
         </div>
     </div>

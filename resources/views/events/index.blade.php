@@ -57,6 +57,8 @@
                                 <td class="px-4 py-2">{{ $event->status }}</td>
                                 <td class="px-4 py-2">{{ $event->start_event_at }}</td>
                                 <td class="px-4 py-2 flex gap-1 mt-5">
+                                    <a href="{{ route('events.show', $event->id) }}"
+                                        class="bg-sky-500 hover:bg-sky-700 text-white text-xs font-bold py-1 px-2 rounded">View</a>
                                     @if (auth()->user()->role == 'admin')
                                         <a href="{{ route('events.edit', $event->id) }}"
                                             class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">
@@ -72,8 +74,6 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <a href="{{ route('events.show', $event->id) }}"
-                                        class="bg-sky-500 hover:bg-sky-700 text-white text-xs font-bold py-1 px-2 rounded">View</a>
                                 </td>
                             </tr>
                         @endforeach
