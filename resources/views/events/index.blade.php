@@ -49,16 +49,17 @@
                                     <img src="{{ Storage::url($event->featured_image) }}" alt="{{ $event->title }}"
                                         class="h-20 w-auto object-cover">
                                 </td>
-                                <td style="padding: 16px; text-align: center;">{{ $event->start_event_at }}</td>
-                                <td style="padding: 16px; text-align: center;">{{ $event->registrant_count }}</td>
-                                <td style="padding: 16px; text-align: center;">
-                                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-                                        <a href="{{ route('events.show', $event->id) }}"
-                                           style="background-color: #2563eb; color: white; padding: 12px 24px; width: 80px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background-color 0.3s; text-align: center;"
-                                           onmouseover="this.style.backgroundColor='#1d4ed8';" onmouseout="this.style.backgroundColor='#2563eb';">
-                                            View
-                                        </a>
-                                        @if(Auth::user()->role == 'admin')
+                                <td class="px-4 py-2">{{ $event->title }}</td>
+                                <td class="px-4 py-2">{{ $event->location }}</td>
+                                <td class="px-4 py-2">{{ $event->price }}</td>
+                                <td class="px-4 py-2">{{ $event->title }}</td>
+                                <td class="px-4 py-2">{{ $event->category->name }}</td>
+                                <td class="px-4 py-2">{{ $event->status }}</td>
+                                <td class="px-4 py-2">{{ $event->start_event_at }}</td>
+                                <td class="px-4 py-2 flex gap-1 mt-5">
+                                    <a href="{{ route('events.show', $event->id) }}"
+                                        class="bg-sky-500 hover:bg-sky-700 text-white text-xs font-bold py-1 px-2 rounded">View</a>
+                                    @if (auth()->user()->role == 'admin')
                                         <a href="{{ route('events.edit', $event->id) }}"
                                            style="background-color: #22c55e; color: white; padding: 12px 24px; width: 80px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background-color 0.3s; text-align: center;"
                                            onmouseover="this.style.backgroundColor='#16a34a';" onmouseout="this.style.backgroundColor='#22c55e';">
@@ -73,8 +74,7 @@
                                                 Delete
                                             </button>
                                         </form>
-                                        @endif
-                                    </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
