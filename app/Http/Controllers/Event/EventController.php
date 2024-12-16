@@ -104,4 +104,15 @@ class EventController extends Controller
 
         return redirect()->route('events.index')->with('success','Event deleted successfully');
     }
+
+    public function welcome()
+    {
+        $upcomingEvents = Event::upcoming()->get();
+        $ongoingEvents = Event::ongoing()->get();
+        $openEvents = Event::open()->get();
+        
+        return view('welcome', compact('upcomingEvents', 'ongoingEvents', 'openEvents'));
+    }
+        
+
 }
