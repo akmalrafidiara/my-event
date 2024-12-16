@@ -11,7 +11,7 @@ class PaymentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,9 +23,9 @@ class PaymentRequest extends FormRequest
     {
         return [
             "amount" => ["required", "numeric"],
-    "bank_name" => ["required", "string"],
-    "bank_beneficiary" => ["required", "string"],
-    "proof_image" => ["required", "image"],
+            "bank_name" => ["required", "string"],
+            "bank_beneficiary" => ["required", "string"],
+            "proof_image" => ["required", "image"],
         ];
     }
 }

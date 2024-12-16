@@ -7,6 +7,7 @@ use App\Http\Requests\Event\EventCreateRequest;
 use App\Http\Requests\Event\EventEditRequest;
 use App\Models\Event\Event;
 use App\Models\Event\EventCategory;
+use App\Models\Event\EventRegistrant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,8 +20,17 @@ class EventController extends Controller
     {
         $events = Event::orderBy('created_at','desc')->get();
 
-        return view('events.index', compact('events'));
-    }
+    // get registrant count
+     $events->map(function($event) {
+        $event->registrant_count = EventRegistrant::query()
+            ->where('event_id', $event->id)
+            ->where('status', 'confirmed')
+            ->count();
+        return $event;
+    });
+
+    return view('events.index', compact('events'));
+}
 
     /**
      * Show the form for creating a new resource.

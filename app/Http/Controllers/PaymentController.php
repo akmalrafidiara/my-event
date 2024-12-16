@@ -10,96 +10,121 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
+    // Constants for payment statuses
+    const STATUS_PENDING = 'pending';
+    const STATUS_VERIFICATION = 'verification';
+    const STATUS_REJECTED = 'rejected';
+    const STATUS_APPROVED = 'approved';
+
     public function index()
-{
-    if (Auth::user()->role == "admin") {
-        $payments = Payment::whereNot('status', 'pending')->orderBy('created_at', 'desc')->get();
-        return view("payments.index", compact("payments"));
-    }
-    
-    if (Auth::user()->role == "user") {
-        $user = Auth::user();
-        $registrantIds = EventRegistrant::where("user_id", $user->id)->pluck("id");
+    {
+        if (Auth::user()->role == "admin") {
+            // Admin can see all payments that are not pending
+            $payments = Payment::where('status', '!=', self::STATUS_PENDING)
+                ->orderBy('created_at', 'desc')
+                ->get();
+            return view("payments.index", compact("payments"));
+        }
 
-        $payments = Payment::whereIn("registrant_id", $registrantIds)->orderBy('created_at', 'desc')->get();
-        return view("payments.index", compact("payments"));
-    }
-}
-public function detail(string $id)
-{
-    if (Auth::user()->role == "user") {
-        $user = Auth::user();
-        $registrantIds = EventRegistrant::where("user_id", $user->id)
-            ->pluck("id")
-            ->toArray();
-
-        $payment = Payment::whereIn("registrant_id", $registrantIds)
-            ->where("id", $id)
-            ->first();
-
-        if (!$payment) {
-            return redirect()->route("payments.index")->with("error", "You are not authorized to access this payment");
+        if (Auth::user()->role == "user") {
+            // Users can only see their own payments
+            $user = Auth::user();
+            $registrantIds = EventRegistrant::where("user_id", $user->id)->pluck("id");
+            $payments = Payment::whereIn("registrant_id", $registrantIds)
+                ->orderBy('created_at', 'desc')
+                ->get();
+            return view("payments.index", compact("payments"));
         }
     }
 
+    public function detail(string $id)  
+    {
     $payment = Payment::findOrFail($id);
+
+    // Ensure users can only view their own payments
+    if (Auth::user()->role == "user" && $payment->registrant->user_id != Auth::id()) {
+        return redirect()->route("payments.index")->with("error", "You are not authorized to access this payment");
+    }
+
     return view("payments.detail", compact("payment"));
-}
-public function update(PaymentRequest $request, string $id)
+    }
+
+    public function update(PaymentRequest $request, string $id)
 {
-    $getPayment = Payment::findOrFail($id);
+    $payment = Payment::findOrFail($id);
 
-    $payment = $getPayment->fill($request->validated());
+    // Ensure the user can only update their own payment
+    if (Auth::user()->role == 'user' && $payment->registrant->user_id != Auth::id()) {
+        return redirect()->route("payments.index")->with("error", "You are not authorized to update this payment");
+    }
 
-    $newImagePath = $request->file('proof_image')->store('payments', 'public');
-    $payment->proof_image = $newImagePath;
+    // Proceed with the update if authorized
+    $payment->fill($request->validated());
+
+    if ($request->hasFile('proof_image')) {
+        $newImagePath = $request->file('proof_image')->store('payments', 'public');
+        $payment->proof_image = $newImagePath;
+    }
 
     $payment->status = 'verification';
-
     $payment->save();
 
     return redirect()->route("payments.index")->with("success", "Payment status updated successfully");
 }
-public function rejected(string $id)
-{
-    $payment = Payment::findOrFail($id);
-    $payment->status = "rejected";
 
-    $payment->save();
-    
-    return redirect()->route("payments.index")->with("success", "Payment status updated successfully");
-}
-public function approved(string $id)
-{
-    $payment = Payment::findOrFail($id);
 
-    $user = $payment->registrant->user;
-    $event = $payment->registrant->event;
+    public function rejected(string $id)
+    {
+        $payment = Payment::findOrFail($id);
 
-    $registrant = EventRegistrant::findOrFail($payment->registrant_id);
+        // Ensure only admin can reject
+        if (Auth::user()->role != 'admin') {
+            return redirect()->route("payments.index")->with("error", "You are not authorized to reject this payment");
+        }
 
-    $registrant->ticket_uid = $this->generateTicketUid($user, $event);
-    $registrant->status = "confirmed";
-    $payment->status = "approved";
+        $payment->status = self::STATUS_REJECTED;
+        $payment->save();
 
-    $registrant->save();
-    $payment->save();
+        return redirect()->route("payments.index")->with("success", "Payment status updated successfully");
+    }
 
-    return redirect()->route("payments.index")->with("success", "Payment status updated successfully");
-}
-private function generateTicketUid($user, $event)
-{
-    $userInitials = strtoupper(substr($user->name, 0, 1) . substr(explode(' ', $user->name)[1] ?? '', 0, 1));
+    public function approved(string $id)
+    {
+        $payment = Payment::findOrFail($id);
 
-    $datePart = now()->format('ymd'); // Tanggal dalam format singkat (YYMMDD)
+        // Ensure only admin can approve
+        if (Auth::user()->role != 'admin') {
+            return redirect()->route("payments.index")->with("error", "You are not authorized to approve this payment");
+        }
 
-    $eventWords = explode(' ', $event->title);
-    $eventInitials = strtoupper(substr($eventWords[0], 0, 1) . substr($eventWords[1] ?? '', 0, 1) . substr($eventWords[2] ?? '', 0, 1));
+        $user = $payment->registrant->user;
+        $event = $payment->registrant->event;
 
-    $randomNumber = rand(100, 999);
+        $registrant = EventRegistrant::findOrFail($payment->registrant_id);
 
-    $ticketUid = $userInitials . $datePart . $eventInitials . $randomNumber;
+        $registrant->ticket_uid = $this->generateTicketUid($user, $event);
+        $registrant->status = "confirmed";
+        $payment->status = self::STATUS_APPROVED;
 
-    return $ticketUid;
-}
+        $registrant->save();
+        $payment->save();
+
+        return redirect()->route("payments.index")->with("success", "Payment status updated successfully");
+    }
+
+    private function generateTicketUid($user, $event)
+    {
+        $userInitials = strtoupper(substr($user->name, 0, 1) . substr(explode(' ', $user->name)[1] ?? '', 0, 1));
+
+        $datePart = now()->format('ymd'); // Tanggal dalam format singkat (YYMMDD)
+
+        $eventWords = explode(' ', $event->title);
+        $eventInitials = strtoupper(substr($eventWords[0], 0, 1) . substr($eventWords[1] ?? '', 0, 1) . substr($eventWords[2] ?? '', 0, 1));
+
+        $randomNumber = rand(100, 999);
+
+        $ticketUid = $userInitials . $datePart . $eventInitials . $randomNumber;
+
+        return $ticketUid;
+    }
 }
