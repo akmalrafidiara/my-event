@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Event;
 use App\Http\Controllers\Controller;
 use App\Models\Event\Event;
 use App\Models\Event\EventRegistrant;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,12 @@ class EventRegistrantController extends Controller
                     ->where('event_id', $event->id)
                     ->where('user_id', $user->id)
                     ->first();
-        
+                    
         if ($registrant) {
+            Payment::create([
+                'registrant_id' => $registrant->id,
+            ]);
+
             return redirect()->route('events.index')->with('error','User is already registered to the event!');
         }
 
@@ -53,8 +58,10 @@ class EventRegistrantController extends Controller
 
         EventRegistrant::create([
             'event_id' => $event->id,
-            'user_id' => $user->id
+            'user_id' => $user->id    
         ]);
+
+        
 
         return redirect()->route('events.index')->with('success','User Successfully registered for the '. $event->title .' event');
     }
@@ -65,5 +72,18 @@ class EventRegistrantController extends Controller
         $today = date('Y-m-d');
         $diff = date_diff(date_create($birthDate), date_create($today));
         return $diff->format('%y');
+    }
+
+    public function index()
+    {
+        $userId = Auth::user()->id;
+
+     $eventRegistrants = EventRegistrant::query()
+         ->where("user_id", $userId)
+         ->orderBy("created_at", "desc")
+         ->with('event')->get();
+
+        
+     return view('event-registrants.index', compact('eventRegistrants'));
     }
 }
