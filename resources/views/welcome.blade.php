@@ -8,81 +8,34 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
+    <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
-        @include('layouts.navigation')
+<body class="bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 min-h-screen flex items-center justify-center font-Poppins">
 
-        <div class="container mx-auto my-6 px-4">
+    <div class="text-center p-8 rounded-xl shadow-lg bg-white bg-opacity-80 w-full max-w-lg">
+        <!-- Logo/Title -->
+        <h1 class="text-5xl font-semibold text-gray-800 mb-6 tracking-wide">Welcome to {{ config('app.name', 'Laravel') }}</h1>
 
-            {{-- Banner Section --}}
-            <div class="banner mb-6">
-                <img src="{{ Storage::url('images/banner.jpg') }}" alt="Event Banner" class="w-full h-64 object-cover rounded-lg shadow-md">
-            </div>
+        <!-- Description -->
+        <p class="text-lg text-gray-600 mb-8">We are excited to have you here! Please log in or register to get started.</p>
 
-            {{-- Upcoming Events --}}
-            <div class="container mx-auto mb-12">
-                <h2 class="text-3xl font-semibold mb-6 text-center">Upcoming Events</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    @forelse($upcomingEvents as $event)
-                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                            <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
-                            <div class="p-4 bg-white">
-                                <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
-                                <p class="text-sm text-gray-600">Start: {{ $event->start_event_at->format('d M, Y') }}</p>
-                                <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:text-blue-700 mt-3 inline-block">Details</a>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-gray-600">No upcoming events found.</p>
-                    @endforelse
-                </div>
-            </div>
+        <!-- Buttons -->
+        <div class="space-x-4">
+            <!-- Login Button -->
+            <a href="{{ route('login') }}" class="inline-block px-10 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 mb-4 sm:mb-0">Login</a>
 
-            {{-- Ongoing Events --}}
-            <div class="container mx-auto mb-12">
-                <h2 class="text-3xl font-semibold mb-6 text-center">Ongoing Events</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    @forelse($ongoingEvents as $event)
-                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                            <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
-                            <div class="p-4 bg-white">
-                                <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
-                                <p class="text-sm text-gray-600">End: {{ $event->end_event_at->format('d M, Y') }}</p>
-                                <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:text-blue-700 mt-3 inline-block">Details</a>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-gray-600">No ongoing events found.</p>
-                    @endforelse
-                </div>
-            </div>
+            <!-- Register Button -->
+            <a href="{{ route('register') }}" class="inline-block px-10 py-3 text-lg font-semibold text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition-all duration-300 transform hover:scale-105">Register</a>
+        </div>
 
-            {{-- Open Events --}}
-            <div class="container mx-auto mb-12">
-                <h2 class="text-3xl font-semibold mb-6 text-center">Open Events</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    @forelse($openEvents as $event)
-                        <div class="card shadow-xl rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                            <img src="{{ Storage::url($event->featured_image) }}" class="w-full h-48 object-cover" alt="{{ $event->title }}">
-                            <div class="p-4 bg-white">
-                                <h5 class="text-lg font-bold text-gray-800">{{ $event->title }}</h5>
-                                <p class="text-sm text-gray-600">Status: Open</p>
-                                <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:text-blue-700 mt-3 inline-block">Details</a>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-gray-600">No open events found.</p>
-                    @endforelse
-                </div>
-            </div>
-
+        <!-- Small Footer -->
+        <div class="mt-12 text-sm text-gray-400">
+            <p>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.</p>
         </div>
     </div>
+
 </body>
 </html>
